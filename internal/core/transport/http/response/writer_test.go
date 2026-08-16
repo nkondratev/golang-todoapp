@@ -22,9 +22,9 @@ func TestWriteHeader(t *testing.T) {
 		recorder := httptest.NewRecorder()
 		rw := NewResponseWriter(recorder)
 		rw.WriteHeader(tt.expected)
-		if rw.GetStatusCodeOrPanic() != tt.expected {
+		if rw.GetStatusCode() != tt.expected {
 			t.Fatalf("status code is not %d. got=%d",
-				tt.expected, rw.GetStatusCodeOrPanic())
+				tt.expected, rw.GetStatusCode())
 		}
 	}
 }
