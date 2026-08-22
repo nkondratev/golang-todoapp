@@ -71,3 +71,13 @@ logs-cleanup:
 	else \
 		echo "Очистка логов отменена"; \
 	fi
+
+todoapp-deploy:
+	@docker compose up -d --build todoapp
+
+todoapp-undeploy:
+	@docker compose down todoapp
+
+
+ps:
+	@docker compose ps
