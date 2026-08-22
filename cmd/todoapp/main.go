@@ -13,6 +13,9 @@ import (
 	core_pgx_pool "github.com/nkondratev/golang-todoapp/internal/core/repository/postgres/pool/pgx"
 	core_http_middleware "github.com/nkondratev/golang-todoapp/internal/core/transport/http/middleware"
 	core_http_server "github.com/nkondratev/golang-todoapp/internal/core/transport/http/server"
+	statistics_postgres_repository "github.com/nkondratev/golang-todoapp/internal/features/statistics/repository/postgres"
+	statistics_service "github.com/nkondratev/golang-todoapp/internal/features/statistics/service"
+	statistics_transport_http "github.com/nkondratev/golang-todoapp/internal/features/statistics/transport/http"
 	tasks_postgres_repository "github.com/nkondratev/golang-todoapp/internal/features/tasks/repository/postgres"
 	tasks_service "github.com/nkondratev/golang-todoapp/internal/features/tasks/service"
 	tasks_transport_http "github.com/nkondratev/golang-todoapp/internal/features/tasks/transport/http"
@@ -62,6 +65,11 @@ func main() {
 	tasksService := tasks_service.NewTasksService(tasksRepository)
 	tasksTransportHTTP := tasks_transport_http.NewTasksHTTPHandler(tasksService)
 
+	logger.Debug("initializing feature", zap.String("feature", "statistics"))
+	statisticsRepository := statistics_postgres_repository.NewStatisticsRepository(pool)
+	statisticsService := statistics_service.NewStatisticsService(statisticsRepository)
+	statisticsTransportHTTP := statistics_transport_http.NewStatisticHTTPHandler(statisticsService)
+
 	logger.Debug("initializing HTTP server")
 	httpServer := core_http_server.NewHTTPServer(
 		core_http_server.NewConfigMust(),
@@ -75,6 +83,7 @@ func main() {
 	apiVersionRouterV1 := core_http_server.NewAPIVersionRouter(core_http_server.APIVersion1)
 	apiVersionRouterV1.RegisterRouters(usersTransportHTTP.Routes()...)
 	apiVersionRouterV1.RegisterRouters(tasksTransportHTTP.Routes()...)
+	apiVersionRouterV1.RegisterRouters(statisticsTransportHTTP.Routes()...)
 
 	// Example of usage apiVersionRouterV2 with separate Middlewares
 	// apiVersionRouterV2 := core_http_server.NewAPIVersionRouter(
