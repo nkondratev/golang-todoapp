@@ -1,9 +1,432 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Todo API — Frontend</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fb;color:#172033}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+header{background:#172033;color:#fff;padding:20px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+header h1{margin:0;font-size:22px}
+header small{opacity:.75}
+.container{max-width:1250px;margin:24px auto;padding:0 18px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.tabs button{border:0;background:#e4e8f0;padding:10px 16px;border-radius:9px;color:#273249}
+.tabs button.active{background:#315efb;color:white}
+.panel{background:#fff;border:1px solid #e1e5ed;border-radius:14px;padding:20px;box-shadow:0 3px 15px #1720330b;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+label{font-size:13px;font-weight:600;color:#596579}
+input,textarea,select{width:100%;border:1px solid #ccd3df;border-radius:8px;padding:10px;background:white}
+textarea{min-height:90px;resize:vertical}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.btn{border:0;border-radius:8px;padding:10px 15px;background:#315efb;color:#fff}
+.btn.secondary{background:#e8ecf3;color:#26324a}
+.btn.danger{background:#d9363e}
+.btn.success{background:#159447}
+pre{background:#101828;color:#d8e2f0;padding:15px;border-radius:10px;overflow:auto;min-height:70px}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{text-align:left;padding:11px;border-bottom:1px solid #e8ebf0;vertical-align:top}
+th{font-size:13px;color:#657084}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;background:#edf1f7}
+.badge.done{background:#dff7e8;color:#16763c}
+.badge.todo{background:#fff0d5;color:#9b5c00}
+.status{margin-top:12px;font-size:14px}
+.error{color:#c62828}
+.success-text{color:#15753c}
+h2{margin-top:0}
+.hidden{display:none}
+.endpoint{font-family:monospace;color:#315efb}
+@media(max-width:700px){header{align-items:flex-start;flex-direction:column}.panel{padding:15px}table{font-size:13px}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Todo Application</h1>
+    <small>REST API frontend · Go Todo API</small>
+  </div>
+  <div><small>API: http://127.0.0.1:5050/api/v1</small></div>
+</header>
 
-  </head>
-  <body>
+<div class="container">
+  <div class="tabs">
+    <button class="active" data-tab="tasks">Задачи</button>
+    <button data-tab="users">Пользователи</button>
+    <button data-tab="statistics">Статистика</button>
+    <button data-tab="api">API / JSON</button>
+  </div>
 
-  </body>
+  <section id="tasks" class="tab">
+    <div class="panel">
+      <h2>Создать задачу</h2>
+      <div class="grid">
+        <div class="field"><label>Автор (user_id) *</label><input id="taskAuthor" type="number" min="1" placeholder="5"></div>
+        <div class="field"><label>Название *</label><input id="taskTitle" maxlength="100" placeholder="Домашнее задание"></div>
+        <div class="field"><label>Описание</label><textarea id="taskDescription" maxlength="1000" placeholder="Сделать до четверга..."></textarea></div>
+      </div>
+      <div class="actions"><button class="btn" onclick="createTask()">Создать</button></div>
+      <div id="taskCreateStatus" class="status"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Список задач</h2>
+      <div class="grid">
+        <div class="field"><label>Фильтр по user_id</label><input id="taskFilterUser" type="number" min="1"></div>
+        <div class="field"><label>Limit</label><input id="taskLimit" type="number" min="1" value="50"></div>
+        <div class="field"><label>Offset</label><input id="taskOffset" type="number" min="0" value="0"></div>
+      </div>
+      <div class="actions"><button class="btn" onclick="loadTasks()">Обновить</button></div>
+      <div id="tasksTable"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Получить / изменить / удалить задачу</h2>
+      <div class="grid">
+        <div class="field"><label>ID задачи</label><input id="editTaskId" type="number" min="1"></div>
+        <div class="field"><label>Новое название</label><input id="editTaskTitle" maxlength="100"></div>
+        <div class="field"><label>Новое описание</label><textarea id="editTaskDescription"></textarea></div>
+        <div class="field"><label>Выполнена</label><select id="editTaskCompleted"><option value="">Не менять</option><option value="true">Да</option><option value="false">Нет</option></select></div>
+      </div>
+      <div class="actions">
+        <button class="btn secondary" onclick="getTask()">Получить</button>
+        <button class="btn success" onclick="updateTask()">Сохранить изменения</button>
+        <button class="btn danger" onclick="deleteTask()">Удалить</button>
+      </div>
+      <div id="taskEditStatus" class="status"></div>
+      <pre id="taskResult">{}</pre>
+    </div>
+  </section>
+
+  <section id="users" class="tab hidden">
+    <div class="panel">
+      <h2>Создать пользователя</h2>
+      <div class="grid">
+        <div class="field"><label>ФИО *</label><input id="userName" placeholder="Ivan Ivanov"></div>
+        <div class="field"><label>Телефон</label><input id="userPhone" maxlength="15" placeholder="+79998887766"></div>
+      </div>
+      <div class="actions"><button class="btn" onclick="createUser()">Создать</button></div>
+      <div id="userCreateStatus" class="status"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Список пользователей</h2>
+      <div class="grid">
+        <div class="field"><label>Limit</label><input id="userLimit" type="number" min="1" value="50"></div>
+        <div class="field"><label>Offset</label><input id="userOffset" type="number" min="0" value="0"></div>
+      </div>
+      <div class="actions"><button class="btn" onclick="loadUsers()">Обновить</button></div>
+      <div id="usersTable"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Получить / изменить / удалить пользователя</h2>
+      <div class="grid">
+        <div class="field"><label>ID пользователя</label><input id="editUserId" type="number" min="1"></div>
+        <div class="field"><label>ФИО</label><input id="editUserName"></div>
+        <div class="field"><label>Телефон</label><input id="editUserPhone" maxlength="15"></div>
+      </div>
+      <div class="actions">
+        <button class="btn secondary" onclick="getUser()">Получить</button>
+        <button class="btn success" onclick="updateUser()">Сохранить изменения</button>
+        <button class="btn danger" onclick="deleteUser()">Удалить</button>
+      </div>
+      <div id="userEditStatus" class="status"></div>
+      <pre id="userResult">{}</pre>
+    </div>
+  </section>
+
+  <section id="statistics" class="tab hidden">
+    <div class="panel">
+      <h2>Статистика</h2>
+      <p>Поля <b>from</b> и <b>to</b> имеют формат YYYY-MM-DD. <b>to</b> — не включительно.</p>
+      <div class="grid">
+        <div class="field"><label>User ID</label><input id="statUser" type="number" min="1"></div>
+        <div class="field"><label>From</label><input id="statFrom" type="date"></div>
+        <div class="field"><label>To</label><input id="statTo" type="date"></div>
+      </div>
+      <div class="actions"><button class="btn" onclick="loadStatistics()">Получить статистику</button></div>
+      <div id="statisticsResult"></div>
+    </div>
+  </section>
+
+  <section id="api" class="tab hidden">
+    <div class="panel">
+      <h2>API</h2>
+      <p>Фронтенд использует Swagger API с базовым адресом <code>http://127.0.0.1:5050/api/v1</code>.</p>
+      <table>
+        <tr><th>Метод</th><th>Endpoint</th><th>Назначение</th></tr>
+        <tr><td>GET</td><td class="endpoint">/tasks</td><td>Список задач</td></tr>
+        <tr><td>POST</td><td class="endpoint">/tasks</td><td>Создать задачу</td></tr>
+        <tr><td>GET</td><td class="endpoint">/tasks/{id}</td><td>Получить задачу</td></tr>
+        <tr><td>PATCH</td><td class="endpoint">/tasks/{id}</td><td>Изменить задачу</td></tr>
+        <tr><td>DELETE</td><td class="endpoint">/tasks/{id}</td><td>Удалить задачу</td></tr>
+        <tr><td>GET</td><td class="endpoint">/users</td><td>Список пользователей</td></tr>
+        <tr><td>POST</td><td class="endpoint">/users</td><td>Создать пользователя</td></tr>
+        <tr><td>GET</td><td class="endpoint">/users/{id}</td><td>Получить пользователя</td></tr>
+        <tr><td>PATCH</td><td class="endpoint">/users/{id}</td><td>Изменить пользователя</td></tr>
+        <tr><td>DELETE</td><td class="endpoint">/users/{id}</td><td>Удалить пользователя</td></tr>
+        <tr><td>GET</td><td class="endpoint">/statistics</td><td>Статистика</td></tr>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+const API = "http://127.0.0.1:5050/api/v1";
+
+async function request(path, options = {}) {
+  const response = await fetch(API + path, {
+    ...options,
+    headers: {"Content-Type":"application/json", ...(options.headers || {})}
+  });
+  const text = await response.text();
+  let data;
+  try { data = text ? JSON.parse(text) : null; }
+  catch { data = text; }
+  if (!response.ok) {
+    const message = data?.message || data?.error || text || `HTTP ${response.status}`;
+    throw new Error(message);
+  }
+  return data;
+}
+
+function esc(v) {
+  return String(v ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+
+function showStatus(id, message, ok=false) {
+  const el = document.getElementById(id);
+  el.className = "status " + (ok ? "success-text" : "error");
+  el.textContent = message;
+}
+
+function showJSON(id, data) {
+  document.getElementById(id).textContent = JSON.stringify(data, null, 2);
+}
+
+document.querySelectorAll(".tabs button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tabs button").forEach(x => x.classList.remove("active"));
+    document.querySelectorAll(".tab").forEach(x => x.classList.add("hidden"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.remove("hidden");
+  });
+});
+
+async function loadTasks() {
+  try {
+    const p = new URLSearchParams();
+    const user = document.getElementById("taskFilterUser").value;
+    const limit = document.getElementById("taskLimit").value;
+    const offset = document.getElementById("taskOffset").value;
+    if (user) p.set("user_id", user);
+    if (limit) p.set("limit", limit);
+    if (offset) p.set("offset", offset);
+
+    const data = await request("/tasks?" + p.toString());
+    const tasks = Array.isArray(data) ? data : [];
+    document.getElementById("tasksTable").innerHTML = tasks.length ? `
+      <table>
+        <tr><th>ID</th><th>Название</th><th>Описание</th><th>Автор</th><th>Статус</th><th>Создана</th><th>Действия</th></tr>
+        ${tasks.map(t => `
+          <tr>
+            <td>${esc(t.id)}</td>
+            <td><b>${esc(t.title)}</b></td>
+            <td>${esc(t.description || "—")}</td>
+            <td>${esc(t.author_user_id)}</td>
+            <td><span class="badge ${t.completed ? "done":"todo"}">${t.completed ? "Выполнена":"В работе"}</span></td>
+            <td>${esc(t.created_at || "—")}</td>
+            <td><button class="btn secondary" onclick="selectTask(${Number(t.id)})">Изменить</button></td>
+          </tr>`).join("")}
+      </table>` : "<p>Задач нет.</p>";
+  } catch(e) {
+    document.getElementById("tasksTable").innerHTML = `<p class="error">${esc(e.message)}</p>`;
+  }
+}
+
+function selectTask(id) {
+  document.getElementById("editTaskId").value = id;
+  document.getElementById("editTaskId").scrollIntoView({behavior:"smooth", block:"center"});
+  getTask();
+}
+
+async function createTask() {
+  try {
+    const author = Number(document.getElementById("taskAuthor").value);
+    const title = document.getElementById("taskTitle").value.trim();
+    const description = document.getElementById("taskDescription").value;
+    if (!author || !title) throw new Error("Заполните author_user_id и title.");
+    const body = {author_user_id: author, title};
+    if (description) body.description = description;
+    const data = await request("/tasks", {method:"POST", body:JSON.stringify(body)});
+    showStatus("taskCreateStatus", "Задача создана.", true);
+    showJSON("taskResult", data);
+    loadTasks();
+  } catch(e) { showStatus("taskCreateStatus", e.message); }
+}
+
+async function getTask() {
+  try {
+    const id = Number(document.getElementById("editTaskId").value);
+    if (!id) throw new Error("Укажите ID задачи.");
+    const data = await request(`/tasks/${id}`);
+    document.getElementById("editTaskTitle").value = data.title || "";
+    document.getElementById("editTaskDescription").value = data.description || "";
+    document.getElementById("editTaskCompleted").value = String(data.completed);
+    showJSON("taskResult", data);
+    showStatus("taskEditStatus", "Задача получена.", true);
+  } catch(e) { showStatus("taskEditStatus", e.message); }
+}
+
+async function updateTask() {
+  try {
+    const id = Number(document.getElementById("editTaskId").value);
+    if (!id) throw new Error("Укажите ID задачи.");
+    const body = {};
+    const title = document.getElementById("editTaskTitle").value;
+    const description = document.getElementById("editTaskDescription").value;
+    const completed = document.getElementById("editTaskCompleted").value;
+    if (title !== "") body.title = title;
+    if (description !== "") body.description = description;
+    if (completed !== "") body.completed = completed === "true";
+    const data = await request(`/tasks/${id}`, {method:"PATCH", body:JSON.stringify(body)});
+    showJSON("taskResult", data);
+    showStatus("taskEditStatus", "Изменения сохранены.", true);
+    loadTasks();
+  } catch(e) { showStatus("taskEditStatus", e.message); }
+}
+
+async function deleteTask() {
+  try {
+    const id = Number(document.getElementById("editTaskId").value);
+    if (!id) throw new Error("Укажите ID задачи.");
+    if (!confirm(`Удалить задачу #${id}?`)) return;
+    await request(`/tasks/${id}`, {method:"DELETE"});
+    showStatus("taskEditStatus", "Задача удалена.", true);
+    showJSON("taskResult", {});
+    loadTasks();
+  } catch(e) { showStatus("taskEditStatus", e.message); }
+}
+
+async function loadUsers() {
+  try {
+    const p = new URLSearchParams();
+    const limit = document.getElementById("userLimit").value;
+    const offset = document.getElementById("userOffset").value;
+    if (limit) p.set("limit", limit);
+    if (offset) p.set("offset", offset);
+    const data = await request("/users?" + p.toString());
+    const users = Array.isArray(data) ? data : [];
+    document.getElementById("usersTable").innerHTML = users.length ? `
+      <table>
+        <tr><th>ID</th><th>ФИО</th><th>Телефон</th><th>Версия</th><th></th></tr>
+        ${users.map(u => `
+          <tr>
+            <td>${esc(u.id)}</td><td>${esc(u.full_name)}</td>
+            <td>${esc(u.phone_number || "—")}</td><td>${esc(u.version)}</td>
+            <td><button class="btn secondary" onclick="selectUser(${Number(u.id)})">Изменить</button></td>
+          </tr>`).join("")}
+      </table>` : "<p>Пользователей нет.</p>";
+  } catch(e) {
+    document.getElementById("usersTable").innerHTML = `<p class="error">${esc(e.message)}</p>`;
+  }
+}
+
+function selectUser(id) {
+  document.getElementById("editUserId").value = id;
+  document.getElementById("editUserId").scrollIntoView({behavior:"smooth", block:"center"});
+  getUser();
+}
+
+async function createUser() {
+  try {
+    const full_name = document.getElementById("userName").value.trim();
+    const phone_number = document.getElementById("userPhone").value.trim();
+    if (!full_name) throw new Error("Укажите ФИО.");
+    const body = {full_name};
+    if (phone_number) body.phone_number = phone_number;
+    const data = await request("/users", {method:"POST", body:JSON.stringify(body)});
+    showStatus("userCreateStatus", "Пользователь создан.", true);
+    showJSON("userResult", data);
+    loadUsers();
+  } catch(e) { showStatus("userCreateStatus", e.message); }
+}
+
+async function getUser() {
+  try {
+    const id = Number(document.getElementById("editUserId").value);
+    if (!id) throw new Error("Укажите ID пользователя.");
+    const data = await request(`/users/${id}`);
+    document.getElementById("editUserName").value = data.full_name || "";
+    document.getElementById("editUserPhone").value = data.phone_number || "";
+    showJSON("userResult", data);
+    showStatus("userEditStatus", "Пользователь получен.", true);
+  } catch(e) { showStatus("userEditStatus", e.message); }
+}
+
+async function updateUser() {
+  try {
+    const id = Number(document.getElementById("editUserId").value);
+    if (!id) throw new Error("Укажите ID пользователя.");
+    const body = {};
+    const name = document.getElementById("editUserName").value;
+    const phone = document.getElementById("editUserPhone").value;
+    if (name !== "") body.full_name = name;
+    if (phone !== "") body.phone_number = phone;
+    const data = await request(`/users/${id}`, {method:"PATCH", body:JSON.stringify(body)});
+    showJSON("userResult", data);
+    showStatus("userEditStatus", "Изменения сохранены.", true);
+    loadUsers();
+  } catch(e) { showStatus("userEditStatus", e.message); }
+}
+
+async function deleteUser() {
+  try {
+    const id = Number(document.getElementById("editUserId").value);
+    if (!id) throw new Error("Укажите ID пользователя.");
+    if (!confirm(`Удалить пользователя #${id}?`)) return;
+    await request(`/users/${id}`, {method:"DELETE"});
+    showStatus("userEditStatus", "Пользователь удалён.", true);
+    showJSON("userResult", {});
+    loadUsers();
+  } catch(e) { showStatus("userEditStatus", e.message); }
+}
+
+async function loadStatistics() {
+  try {
+    const p = new URLSearchParams();
+    const user = document.getElementById("statUser").value;
+    const from = document.getElementById("statFrom").value;
+    const to = document.getElementById("statTo").value;
+    if (user) p.set("user_id", user);
+    if (from) p.set("from", from);
+    if (to) p.set("to", to);
+
+    const d = await request("/statistics?" + p.toString());
+    document.getElementById("statisticsResult").innerHTML = `
+      <table>
+        <tr><th>Создано задач</th><th>Выполнено</th><th>Процент выполнения</th><th>Среднее время выполнения</th></tr>
+        <tr>
+          <td>${esc(d.tasks_created)}</td>
+          <td>${esc(d.tasks_completed)}</td>
+          <td>${esc(d.tasks_completed_rate)}%</td>
+          <td>${esc(d.tasks_average_completion_time)}</td>
+        </tr>
+      </table>
+      <pre>${esc(JSON.stringify(d,null,2))}</pre>`;
+  } catch(e) {
+    document.getElementById("statisticsResult").innerHTML = `<p class="error">${esc(e.message)}</p>`;
+  }
+}
+
+loadTasks();
+loadUsers();
+</script>
+</body>
 </html>
