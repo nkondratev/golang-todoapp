@@ -1,6 +1,6 @@
 # Архитектура
 
-**Разделы:** [Главная](../index.md) | Пользователю: [Быстрый старт](../user/quick-start.md) · [Руководство](../user/user-guide.md) · [FAQ](../user/faq.md) | Разработчику: [Установка](../developer/installation.md) · [Архитектура](../developer/architecture.md) · [API](../developer/api-reference.md) · [Эксплуатация](../developer/operations.md)
+**Разделы:** [Главная](../index.md) | Пользователю: [Быстрый старт](../user/quick-start.md) · [Руководство](../user/user-guide.md) · [FAQ](../user/faq.md) | Разработчику: [Установка](../developer/installation.md) · [Архитектура](../developer/architecture.md) · [API](../developer/api-reference.md)
 
 Раздел объясняет, из чего состоит приложение и в каком порядке его компоненты проверяются при внедрении.
 
@@ -41,4 +41,4 @@
 go test ./...
 ```
 
-Команда выполняет автотесты проекта; все тесты должны проходить без ошибок. Затем переходите к [справочнику API](api-reference.md) и [эксплуатации](operations.md).
+Команда выполняет автотесты проекта; все тесты должны проходить без ошибок. Затем переходите к [справочнику API](api-reference.md).

@@ -1,11 +1,10 @@
 # Часто задаваемые вопросы
 
-**Разделы:** [Главная](../index.md) | Пользователю: [Быстрый старт](../user/quick-start.md) · [Руководство](../user/user-guide.md) · [FAQ](../user/faq.md) | Разработчику: [Установка](../developer/installation.md) · [Архитектура](../developer/architecture.md) · [API](../developer/api-reference.md) · [Эксплуатация](../developer/operations.md)
+**Разделы:** [Главная](../index.md) | Пользователю: [Быстрый старт](../user/quick-start.md) · [Руководство](../user/user-guide.md) · [FAQ](../user/faq.md) | Разработчику: [Установка](../developer/installation.md) · [Архитектура](../developer/architecture.md) · [API](../developer/api-reference.md)
 
 <details>
 <summary>Страница не открывается</summary>
 
-Проверьте адрес и подключение к локальной сети. Если всё верно — сообщите администратору: возможно, не запущены контейнеры (см. [диагностику](../developer/operations.md)).
 </details>
 
 <details>
