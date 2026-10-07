@@ -12,4 +12,3 @@ nav:
       - Установка и настройка: developer/installation.md
       - Архитектура: developer/architecture.md
       - Справочник API: developer/api-reference.md
-      - Эксплуатация и откат: developer/operations.md

@@ -1,7 +1,7 @@
 # Документация «Задачи онлайн»
 
 Интерактивная документация веб-приложения **«Задачи онлайн»** (TODO API) в формате Markdown.
-Подготовлена для двух ролей: **пользователь** и **разработчик/администратор**.
+Подготовлена для двух ролей: **пользователь** и **разработчик**.
 
 Начните с файла [index.md](index.md).
 
@@ -20,15 +20,7 @@ interactive-documentation/
 │   ├── installation.md
 │   ├── architecture.md
 │   ├── api-reference.md
-│   └── operations.md
 └── images/
     ├── interface.svg
-    ├── architecture.svg
-    └── deployment-flow.svg
+    └── architecture.svg
 ```
-
-## Просмотр
-
-- **VS Code:** откройте папку, `Ctrl+Shift+V` на нужном `.md`-файле.
-- **GitHub/GitLab:** загрузите папку в репозиторий — ссылки и изображения работают сразу.
-- **MkDocs:** `pip install mkdocs-material`, затем `mkdocs serve` и откройте http://127.0.0.1:8000

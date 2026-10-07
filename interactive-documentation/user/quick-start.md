@@ -1,6 +1,6 @@
 # Быстрый старт
 
-**Разделы:** [Главная](../index.md) | Пользователю: [Быстрый старт](../user/quick-start.md) · [Руководство](../user/user-guide.md) · [FAQ](../user/faq.md) | Разработчику: [Установка](../developer/installation.md) · [Архитектура](../developer/architecture.md) · [API](../developer/api-reference.md) · [Эксплуатация](../developer/operations.md)
+**Разделы:** [Главная](../index.md) | Пользователю: [Быстрый старт](../user/quick-start.md) · [Руководство](../user/user-guide.md) · [FAQ](../user/faq.md) | Разработчику: [Установка](../developer/installation.md) · [Архитектура](../developer/architecture.md) · [API](../developer/api-reference.md)
 
 Цель раздела — за несколько минут создать пользователя и первую задачу. Предполагается, что администратор уже установил приложение и сообщил вам его адрес (подробности — в [установке](../developer/installation.md)).
 
