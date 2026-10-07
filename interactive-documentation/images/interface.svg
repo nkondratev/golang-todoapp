@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 420" font-family="Arial, sans-serif">
+<rect width="700" height="420" fill="#f4f6fa"/>
+<rect x="0" y="0" width="700" height="50" fill="#2b5bd7"/>
+<text x="24" y="32" font-size="20" fill="#fff" font-weight="bold">Задачи онлайн</text>
+<text x="520" y="32" font-size="14" fill="#fff">Пользователь: Иван</text>
+<rect x="24" y="70" width="652" height="100" rx="8" fill="#fff" stroke="#d0d6e2"/>
+<text x="40" y="95" font-size="14" fill="#333" font-weight="bold">Новая задача</text>
+<rect x="40" y="108" width="440" height="36" rx="4" fill="#fff" stroke="#9aa5bd"/>
+<text x="52" y="131" font-size="14" fill="#8a93a6">Название задачи...</text>
+<rect x="500" y="108" width="150" height="36" rx="4" fill="#2b5bd7"/>
+<text x="548" y="131" font-size="14" fill="#fff">Добавить</text>
+<rect x="24" y="190" width="652" height="210" rx="8" fill="#fff" stroke="#d0d6e2"/>
+<text x="40" y="215" font-size="14" fill="#333" font-weight="bold">Список задач</text>
+<g font-size="13" fill="#333">
+<text x="40" y="245">Название</text><text x="300" y="245">Статус</text><text x="420" y="245">Создана</text><text x="540" y="245">Закрыта</text>
+<line x1="40" y1="254" x2="660" y2="254" stroke="#d0d6e2"/>
+<text x="40" y="280">Подготовить отчёт</text><text x="300" y="280" fill="#2e8b3d">Выполнена</text><text x="420" y="280">01.10.2026</text><text x="540" y="280">05.10.2026</text>
+<text x="40" y="315">Позвонить клиенту</text><text x="300" y="315" fill="#d08a00">В работе</text><text x="420" y="315">03.10.2026</text><text x="540" y="315">—</text>
+<text x="40" y="350">Обновить документацию</text><text x="300" y="350" fill="#2b5bd7">Новая</text><text x="420" y="350">07.10.2026</text><text x="540" y="350">—</text>
+</g>
+<text x="40" y="385" font-size="11" fill="#8a93a6">Схематичное изображение интерфейса (замените скриншотом реального приложения)</text>
+</svg>
