@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" font-family="Arial, sans-serif">
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs>
+<rect width="700" height="440" fill="#fff"/>
+<rect x="200" y="15" width="260" height="50" rx="8" fill="#e8f0fe" stroke="#2b5bd7"/>
+<text x="330" y="45" text-anchor="middle" font-size="15">Клиент (JS, HTML, CSS)</text>
+<rect x="200" y="100" width="260" height="55" rx="8" fill="#e6f4ea" stroke="#2e8b3d"/>
+<text x="330" y="124" text-anchor="middle" font-size="15" font-weight="bold">Handler</text>
+<text x="330" y="144" text-anchor="middle" font-size="12">HTTP-маршруты, обработчики</text>
+<rect x="200" y="190" width="260" height="55" rx="8" fill="#e6f4ea" stroke="#2e8b3d"/>
+<text x="330" y="214" text-anchor="middle" font-size="15" font-weight="bold">Service</text>
+<text x="330" y="234" text-anchor="middle" font-size="12">Бизнес-логика задач и статусов</text>
+<rect x="200" y="280" width="260" height="55" rx="8" fill="#e6f4ea" stroke="#2e8b3d"/>
+<text x="330" y="304" text-anchor="middle" font-size="15" font-weight="bold">Repository</text>
+<text x="330" y="324" text-anchor="middle" font-size="12">Доступ к данным (pgx)</text>
+<rect x="200" y="370" width="260" height="50" rx="8" fill="#fff3e0" stroke="#d08a00"/>
+<text x="330" y="400" text-anchor="middle" font-size="15">PostgreSQL</text>
+<g stroke="#555" stroke-width="2" marker-end="url(#a)">
+<line x1="330" y1="65" x2="330" y2="98"/><line x1="330" y1="155" x2="330" y2="188"/>
+<line x1="330" y1="245" x2="330" y2="278"/><line x1="330" y1="335" x2="330" y2="368"/></g>
+<rect x="520" y="100" width="150" height="235" rx="8" fill="#f3e8fd" stroke="#8a4fd0" stroke-dasharray="6 4"/>
+<text x="595" y="205" text-anchor="middle" font-size="15" font-weight="bold">Logger (zap)</text>
+<text x="595" y="228" text-anchor="middle" font-size="12">на всех уровнях</text>
+<g stroke="#8a4fd0" stroke-dasharray="4 3"><line x1="460" y1="127" x2="520" y2="127"/><line x1="460" y1="217" x2="520" y2="217"/><line x1="460" y1="307" x2="520" y2="307"/></g>
+<text x="20" y="130" font-size="12" fill="#555">Swagger (swaggo)</text>
+<line x1="125" y1="126" x2="200" y2="126" stroke="#555" stroke-dasharray="4 3"/>
+</svg>

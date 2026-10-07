@@ -1,0 +1,15 @@
+site_name: Задачи онлайн — документация
+theme:
+  name: material
+  language: ru
+nav:
+  - Главная: index.md
+  - Пользователю:
+      - Быстрый старт: user/quick-start.md
+      - Руководство пользователя: user/user-guide.md
+      - FAQ: user/faq.md
+  - Разработчику:
+      - Установка и настройка: developer/installation.md
+      - Архитектура: developer/architecture.md
+      - Справочник API: developer/api-reference.md
+      - Эксплуатация и откат: developer/operations.md
