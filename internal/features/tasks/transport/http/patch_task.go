@@ -33,7 +33,7 @@ func (r *PatchTaskRequest) Validate() error {
 
 	if r.Description.Set {
 		if r.Description.Value != nil {
-			descriptionLength := len([]rune(*r.Title.Value))
+			descriptionLength := len([]rune(*r.Description.Value))
 			if descriptionLength < 1 || descriptionLength > 100 {
 				return fmt.Errorf("`Description` must be between 1 and 1000 symbols")
 			}
