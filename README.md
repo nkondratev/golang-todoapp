@@ -2,6 +2,7 @@
 
 Веб-приложение для ведения списка задач: REST API на Go, база данных PostgreSQL и готовый веб-интерфейс, который открывается прямо в браузере. Приложение позволяет заводить пользователей, назначать им задачи, отмечать выполнение и смотреть статистику.
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 ## Содержание
 
@@ -390,3 +391,6 @@ erDiagram
 =======
 
 >>>>>>> 1dd99ad (update README, add section about database. Closes #16)
+=======
+[Документация проекта (Wiki)](https://github.com/nkondratev/golang-todoapp/wiki)
+>>>>>>> 3e82520 (update README, now it direct to wiki)
