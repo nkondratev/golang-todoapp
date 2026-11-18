@@ -8,6 +8,7 @@ type WebHTTPHandler struct {
 
 type WebService interface {
 	GetMainPage() ([]byte, error)
+	GetRegistrationPage() ([]byte, error)
 }
 
 func NewWebHTTPHandler(webService WebService) *WebHTTPHandler {
